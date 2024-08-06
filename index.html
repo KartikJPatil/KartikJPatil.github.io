@@ -14,6 +14,7 @@
             background: rgba(255, 255, 255, 0.8);
             padding: 10px;
             border-radius: 5px;
+            z-index: 10; /* Ensure the HUD is on top */
         }
     </style>
 </head>
@@ -30,7 +31,7 @@
     <a-scene embedded arjs='sourceType: webcam;'>
         <a-camera position="0 0 0" look-controls></a-camera>
         <!-- Arrow -->
-        <a-cone id="arrow" radius-bottom="0.05" height="0.2" color="red" position="0 0 -5" rotation="0 0 0"></a-cone>
+        <a-cone id="arrow" radius-bottom="0.08" height="0.4" color="red" position="0 0 -5" rotation="0 0 0"></a-cone>
         
         <!-- Background Plane for HUD -->
         <a-plane position="0 1.6 -2" width="1.5" height="0.4" color="#FFFFFF" opacity="0.8"></a-plane>
@@ -105,8 +106,18 @@
         });
 
         document.querySelector('#arrow').setAttribute('arrow-behavior', '');
- this.camera = new THREE.PerspectiveCamera();
-    this.camera.matrixAutoUpdate = false
+
+        // Check for AR.js Errors
+        window.addEventListener('error', function(event) {
+            console.error('Error occurred:', event.error);
+        });
+
+        // Add camera permission error handling
+        navigator.permissions.query({ name: 'camera' }).then(function(permissionStatus) {
+            if (permissionStatus.state !== 'granted') {
+                alert('Camera permission is required for this application to work.');
+            }
+        });
     </script>
 </body>
 </html>
